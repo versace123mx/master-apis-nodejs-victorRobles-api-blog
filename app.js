@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { dbConecction } from "./basedatos/conexion.js";
+import route from "./routes/articulo.js"
 
 dotenv.config(); //iniciando variables de entorno
 dbConecction(); //conexion base de datos
@@ -17,9 +18,9 @@ app.use(cors());
 app.use(express.json());
 
 //Crear Rutas
-app.get('/probando',(req,res)=>{
-    res.status(200).json({msg:'hola mundo'})
-})
+app.use("/api",route)
+//app.use("/api/mensajes",routeMensaje) aqui creamos otro endpoint
+//app.use(route) si no le pasamos la ruta inicial todas se serviran apartir de home
 
 //Crear servidor y escuchar peticiones http
 app.listen(puerto, () => {
