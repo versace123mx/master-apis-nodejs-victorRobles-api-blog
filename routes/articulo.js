@@ -1,7 +1,7 @@
 import {Router} from "express";
 import { check } from 'express-validator'
 import { validarCampos } from '../middlewares/validar-campos.js'
-import {crearArticulo, curso, mensajes, test} from '../controllers/articulo.js'
+import { crearArticulo, curso, listarArticulos, mensajes, test} from '../controllers/articulo.js'
 
 const route = Router();
 
@@ -17,4 +17,8 @@ check('titulo','El titulo debe de tener minimo 5 caracteres y maximo 50').isLeng
 check('contenido','El campo contendio es requerido y no debe de estar vacio').not().isEmpty().trim(),
 validarCampos
 ],crearArticulo)
+
+//listar todos los articulos
+route.get('/listar',listarArticulos)
+
 export default route

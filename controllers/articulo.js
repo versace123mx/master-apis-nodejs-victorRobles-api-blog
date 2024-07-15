@@ -34,4 +34,14 @@ const crearArticulo = async (req, res) => {
     }
 };
 
-export { test, curso, mensajes, crearArticulo };
+const listarArticulos = async (req,res) => {
+    try {
+        const consulta = await Articulo.find()
+        const numResult = consulta.length
+        res.status(200).json({numResult,result: consulta})
+    } catch (error) {
+        res.status(400).json({msg: `Error en la consulta: ${error}`})
+    }
+}
+
+export { test, curso, mensajes, crearArticulo, listarArticulos };
