@@ -1,7 +1,7 @@
 import {Router} from "express";
-import { check } from 'express-validator'
+import { check,param } from 'express-validator'
 import { validarCampos } from '../middlewares/validar-campos.js'
-import { crearArticulo, curso, listarArticulos, mensajes, test} from '../controllers/articulo.js'
+import { crearArticulo, curso, deletearticuloforid, getarticulofindById, listarArticulos, mensajes, test} from '../controllers/articulo.js'
 
 const route = Router();
 
@@ -19,6 +19,18 @@ validarCampos
 ],crearArticulo)
 
 //listar todos los articulos
-route.get('/listar',listarArticulos)
+route.get('/listar/:limite?',listarArticulos)
 
+
+//obterne un resultado por id
+route.get('/getarticuloforbyid/:id',[
+    check('id','No es un id de Mongo Valido').isMongoId(),
+    validarCampos
+],getarticulofindById)
+
+//eliminar articulo
+route.delete('/deletearticuloforid/:id',[
+    check('id','No es un id de Mongo Valido').isMongoId(),
+    validarCampos
+],deletearticuloforid)
 export default route

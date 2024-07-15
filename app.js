@@ -23,6 +23,14 @@ app.use("/api",route)
 //app.use("/api/mensajes",routeMensaje) aqui creamos otro endpoint
 //app.use(route) si no le pasamos la ruta inicial todas se serviran apartir de home
 
+
+// Middleware para manejar rutas no encontradas
+app.use((req, res) => {
+    res.status(404).json({
+      errors: [{ msg: 'Ruta no encontrada' }]
+    });
+  });
+  
 //Crear servidor y escuchar peticiones http
 app.listen(puerto, () => {
     console.log(`El servidor de espress esta funcionando en el puerto ${puerto}`);

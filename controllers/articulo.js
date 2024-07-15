@@ -35,8 +35,12 @@ const crearArticulo = async (req, res) => {
 };
 
 const listarArticulos = async (req,res) => {
+    let limit = ''
+    if(req.query.limite && !isNaN(Number(req.query.limite))){
+        limit = Number(req.query.limite)
+    }
     try {
-        const consulta = await Articulo.find()
+        const consulta = await Articulo.find().sort({fecha:-1}).limit(limit)
         const numResult = consulta.length
         res.status(200).json({numResult,result: consulta})
     } catch (error) {
@@ -44,4 +48,38 @@ const listarArticulos = async (req,res) => {
     }
 }
 
-export { test, curso, mensajes, crearArticulo, listarArticulos };
+const getarticulofindById = async (req,res) => {
+    //recoger id por url
+    const { id } = req.params
+
+    //buscararticulo
+    try {
+        const result = await Articulo.findById(id)
+        if(result){
+            return res.status(200).json({result})
+        }
+        res.status(400).json({msg: "Resultado no encontrado"})
+    } catch (error) {
+        res.status(401).json({msg: `Error valida el id o contacta con el admin ${error}`})
+    }
+}
+
+const deletearticuloforid = async (req, res) => {
+    //recoger id por url
+    const { id } = req.params
+
+    //buscararticulo
+    try {
+        const result = await Articulo.findById(id)
+        if(result){
+            await Articulo.findOneAndDelete({_id:result._id})
+            return res.status(200).json({msg: `El registro ${result._id} ha sido eliminado correctamente`})
+        }
+        res.status(400).json({msg: "Resultado no encontrado"})
+    } catch (error) {
+        res.status(401).json({msg: `Error valida el id o contacta con el admin ${error}`})
+    }
+}
+
+
+export { test, curso, mensajes, crearArticulo, listarArticulos, getarticulofindById, deletearticuloforid };
