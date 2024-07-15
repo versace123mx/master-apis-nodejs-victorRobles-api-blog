@@ -1,4 +1,7 @@
+import fs from 'fs'
+import { json } from "express";
 import Articulo from "../models/Articulo.js";
+import { subirArchivo } from '../helper/subir-archivo.js'
 
 const test = (req, res) => {
     res.status(200).json({ msg: "Hola Maria Jose mi amor" });
@@ -105,6 +108,59 @@ const editar = async (req,res) =>{
 
 }
 
+const cargarArchivo = async (req, res) => {
+
+    try {
+        const nombre = await subirArchivo(req.files, undefined, 'pecoras')
+        res.json({ nombre })
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
+
+const actualizarImagen = async (req, res) => {
+    const { id } = req.params
+
+    const modelo = await Articulo.findById(id)
+        if (!modelo) {
+            return res.status(400).json({ msg: `No existe un usuario con el id ${id}` })
+        }
+
+    //verificamos si tiene el campo imagen, si tiene el campo imagen es por que ya hay una imagen previa
+    if (modelo.imagen) {
+        const pathImage = './uploads/' + modelo.imagen //creamos la ruta de la imagen previa
+        //verificamos si existe la imagen
+        if (fs.existsSync(pathImage)) {
+            fs.unlinkSync(pathImage)//en caso de que la imagen previa exista procedemos a eliminarla
+        }
+    }
+
+    const nombre = await subirArchivo(req.files, undefined)
+    modelo.imagen = nombre
+    await modelo.save({ new: true })
+    res.json({ modelo })
+
+}
+const mostrarImagen = async (req, res) => {
+    const { id } = req.params
+
+    const modelo = await Articulo.findById(id)
+        if (!modelo) {
+            return res.status(400).json({ msg: `No existe un usuario con el id ${id}` })
+        }
+
+    //verificamos si tiene el campo imagen, si tiene el campo imagen es por que ya hay una imagen previa
+    if (modelo.imagen) {
+        const pathImage = `${process.cwd()}/uploads/${modelo.imagen}` //creamos la ruta de la imagen previa
+        //verificamos si existe la imagen
+        if (fs.existsSync(pathImage)) {
+            return res.sendFile(pathImage)
+        }
+    }
+    const pathImage = `${process.cwd()}/assets/no-image.jpg`
+    return res.sendFile(pathImage)
+}
+
 export { 
         test, 
         curso, 
@@ -113,5 +169,8 @@ export {
         listarArticulos, 
         getarticulofindById, 
         deletearticuloforid,
-        editar 
+        editar,
+        cargarArchivo,
+        actualizarImagen,
+        mostrarImagen
     };

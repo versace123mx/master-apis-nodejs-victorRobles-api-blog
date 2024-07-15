@@ -1,7 +1,8 @@
 import {Router} from "express";
-import { check,param } from 'express-validator'
+import { check } from 'express-validator'
 import { validarCampos } from '../middlewares/validar-campos.js'
-import { crearArticulo, curso, deletearticuloforid, editar, getarticulofindById, listarArticulos, mensajes, test} from '../controllers/articulo.js'
+import { validarArchivoSubir } from '../middlewares/validar-archivo.js'
+import { crearArticulo, curso, cargarArchivo, actualizarImagen, mostrarImagen,  deletearticuloforid, editar, getarticulofindById, listarArticulos, mensajes, test} from '../controllers/articulo.js'
 
 const route = Router();
 
@@ -41,4 +42,25 @@ route.put('/articulo/:id',[
     check('contenido','El campo contendio es requerido y no debe de estar vacio').not().isEmpty().trim(),
     validarCampos
 ],editar)
+
+//ruta para cargar una imagen 
+route.post('/subir-imagen',[
+    validarArchivoSubir
+],cargarArchivo)
+
+//Metodo para actualizar la imagen de un Articulo
+route.put('/subir-imagen/:id',[
+    check('id','El id debe ser de mongo').isMongoId(),
+    validarCampos,
+    validarArchivoSubir
+],actualizarImagen)
+
+//Metodo para mostrar la imagen de un Articulo por id
+route.get('/subir-imagen/:id',[
+    check('id','El id debe ser de mongo').isMongoId(),
+    validarCampos
+],mostrarImagen)
+
+
+
 export default route
