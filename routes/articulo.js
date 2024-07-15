@@ -1,7 +1,7 @@
 import {Router} from "express";
 import { check,param } from 'express-validator'
 import { validarCampos } from '../middlewares/validar-campos.js'
-import { crearArticulo, curso, deletearticuloforid, getarticulofindById, listarArticulos, mensajes, test} from '../controllers/articulo.js'
+import { crearArticulo, curso, deletearticuloforid, editar, getarticulofindById, listarArticulos, mensajes, test} from '../controllers/articulo.js'
 
 const route = Router();
 
@@ -33,4 +33,12 @@ route.delete('/deletearticuloforid/:id',[
     check('id','No es un id de Mongo Valido').isMongoId(),
     validarCampos
 ],deletearticuloforid)
+
+route.put('/articulo/:id',[
+    check('id','No es un id de Mongo Valido').isMongoId(),
+    check('titulo','El campo titulo es requerido y no debe de estar vacio').not().isEmpty().trim(),
+    check('titulo','El titulo debe de tener minimo 5 caracteres y maximo 50').isLength({ min: 5,max:50 }),
+    check('contenido','El campo contendio es requerido y no debe de estar vacio').not().isEmpty().trim(),
+    validarCampos
+],editar)
 export default route

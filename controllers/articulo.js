@@ -81,5 +81,37 @@ const deletearticuloforid = async (req, res) => {
     }
 }
 
+const editar = async (req,res) =>{
+    //recogemos el id
+    const {id} = req.params
 
-export { test, curso, mensajes, crearArticulo, listarArticulos, getarticulofindById, deletearticuloforid };
+    //buscar si existe ese registro
+    const result = await Articulo.findById(id)
+    if(!result){
+        return res.status(400).json({msg: "Resultado no encontrado"})
+    }
+
+    //recoger datos del body
+    const parametros = req.body
+    
+    try {
+        //realizamos la actualizacion
+        const resp = await Articulo.findOneAndUpdate({_id:result._id},parametros, {new: true})
+        return res.status(200)
+                    .json({msg: `El registro ${result._id} ha sido actualizado correctamente`,resp})
+    } catch (error) {
+        res.status(401).json({msg: `Error valida el id o contacta con el admin ${error}`})
+    }    
+
+}
+
+export { 
+        test, 
+        curso, 
+        mensajes, 
+        crearArticulo, 
+        listarArticulos, 
+        getarticulofindById, 
+        deletearticuloforid,
+        editar 
+    };
