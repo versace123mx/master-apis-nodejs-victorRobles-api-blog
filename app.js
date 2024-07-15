@@ -14,8 +14,9 @@ const puerto = process.env.PUERTO_EXPRESS || 3000;
 //configurar cors
 app.use(cors());
 
-//Convertir body a objeto de js
+//Convertir body a objeto de js, cuando se mandan datos en postman -> body -> row JSON
 app.use(express.json());
+app.use(express.urlencoded({extended:true}))//para recibir datos desde un formulario si carga de imagenes postman -> body -> x-www-form-urlencoded
 
 //Crear Rutas
 app.use("/api",route)
