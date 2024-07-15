@@ -1,5 +1,4 @@
 import fs from 'fs'
-import { json } from "express";
 import Articulo from "../models/Articulo.js";
 import { subirArchivo } from '../helper/subir-archivo.js'
 
