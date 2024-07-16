@@ -2,7 +2,7 @@ import {Router} from "express";
 import { check } from 'express-validator'
 import { validarCampos } from '../middlewares/validar-campos.js'
 import { validarArchivoSubir } from '../middlewares/validar-archivo.js'
-import { crearArticulo, curso, cargarArchivo, actualizarImagen, mostrarImagen,  deletearticuloforid, editar, getarticulofindById, listarArticulos, mensajes, test} from '../controllers/articulo.js'
+import { buscador, crearArticulo, curso, cargarArchivo, actualizarImagen, mostrarImagen,  deletearticuloforid, editar, getarticulofindById, listarArticulos, mensajes, test} from '../controllers/articulo.js'
 
 const route = Router();
 
@@ -61,6 +61,6 @@ route.get('/subir-imagen/:id',[
     validarCampos
 ],mostrarImagen)
 
-
+route.get('/buscar/:busqueda',buscador)
 
 export default route

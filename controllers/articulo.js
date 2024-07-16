@@ -160,6 +160,33 @@ const mostrarImagen = async (req, res) => {
     return res.sendFile(pathImage)
 }
 
+const buscador = async (req,res)=> {
+    
+    const { busqueda } = req.params
+
+    try {
+
+        const respuesta = await Articulo.find({
+            "$or":[
+                {"titulo":{"$regex":busqueda,"$options":"i"}},
+                {"contenido":{"$regex":busqueda,"$options":"i"}}
+            ]
+        })
+        .sort({fecha:-1})
+
+        if(!respuesta.length){
+            return res.status(404).json({status:"error",msg:"No se han encontrado articulos"})
+        }
+        
+        res.status(200).json({status:"success",respuesta})
+
+    } catch (error) {
+        return res.status(404).json({status:"error1",msg:error})
+    }
+
+}
+
+
 export { 
         test, 
         curso, 
@@ -171,5 +198,6 @@ export {
         editar,
         cargarArchivo,
         actualizarImagen,
-        mostrarImagen
+        mostrarImagen,
+        buscador
     };
